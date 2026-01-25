@@ -50,9 +50,6 @@ Join our community of developers creating universal apps.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 
 
-
-for firebase in production : 
-
 To Run Now:
 
 npm start
@@ -75,4 +72,3 @@ Android: android/app/google-services.json
 Configure Firebase plugin in app.json (when ready for production)
 
 The app should now work in Expo Go without the Firebase error!
-

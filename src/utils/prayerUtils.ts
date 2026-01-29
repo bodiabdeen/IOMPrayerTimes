@@ -27,7 +27,7 @@ export const getNextPrayer = (prayers: Prayer[]): Prayer | null => {
     }
   );
 
-  console.log('🕌 Main prayers for countdown:', mainPrayers.map(p => p.name).join(', '));
+  // console.log('🕌 Main prayers for countdown:', mainPrayers.map(p => p.name).join(', '));
 
   // Find first prayer where APT hasn't passed yet
   for (const prayer of mainPrayers) {
@@ -40,7 +40,7 @@ export const getNextPrayer = (prayers: Prayer[]): Prayer | null => {
       const prayerTime = hours * 60 + minutes;
 
       if (prayerTime > currentTime) {
-        console.log(`🕌 Next prayer: ${prayer.name} at APT ${timeToUse}`);
+        // console.log(`🕌 Next prayer: ${prayer.name} at APT ${timeToUse}`);
         return prayer;
       }
     } catch (error) {
@@ -53,7 +53,7 @@ export const getNextPrayer = (prayers: Prayer[]): Prayer | null => {
   // Name might be "Fajr الفجر" so use startsWith
   const fajr = mainPrayers.find(p => p.name && p.name.toLowerCase().startsWith('fajr'));
   if (fajr) {
-    console.log('🕌 All prayers passed today - Next prayer: Fajr (tomorrow at APT ' + fajr.apt + ')');
+    // console.log('🕌 All prayers passed today - Next prayer: Fajr (tomorrow at APT ' + fajr.apt + ')');
     return fajr;
   }
 

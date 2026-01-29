@@ -5,12 +5,39 @@ apply plugin: "com.facebook.react"
 def enableProguardInReleaseBuilds = false
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+// Resolve full path to node so release bundle works from Android Studio (where PATH may not include node).
+def getNodeExecutable() {
+    def nodeEnv = System.getenv("NODE_BINARY")
+    if (nodeEnv != null && !nodeEnv.isEmpty()) return nodeEnv.trim()
+    try {
+        def proc = ["/bin/sh", "-c", "command -v node 2>/dev/null || which node 2>/dev/null"].execute((String[]) null, project.rootDir)
+        proc.waitFor()
+        if (proc.exitValue() == 0) {
+            def path = proc.text.trim()
+            if (path) return path
+        }
+        // Login shell so nvm/fnm are in PATH (Android Studio often has minimal PATH)
+        proc = ["/bin/sh", "-l", "-c", "command -v node 2>/dev/null"].execute((String[]) null, project.rootDir)
+        proc.waitFor()
+        if (proc.exitValue() == 0) {
+            def path = proc.text.trim()
+            if (path) return path
+        }
+    } catch (Exception ignored) {}
+    for (path in ["/opt/homebrew/bin/node", "/usr/local/bin/node"]) {
+        if (path && new File(path).exists()) return path
+    }
+    return "node"
+}
+
 react {
     /* Folders */
     root = file("../../")
     reactNativeDir = file("../../node_modules/react-native")
     codegenDir = file("../../node_modules/@react-native/codegen")
     cliFile = file("../../node_modules/react-native/cli.js")
+    /* Node path for release bundle (fixes "command 'node'" when building from Android Studio) */
+    nodeExecutableAndArgs = [getNodeExecutable()]
 }
 
 android {
@@ -26,7 +53,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", (findProperty("newArchEnabled") ?: "true").toBoolean().toString()
         buildConfigField "boolean", "IS_HERMES_ENABLED", "(findProperty('hermesEnabled') ?: 'true').toBoolean()"
     }
     

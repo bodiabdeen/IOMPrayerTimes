@@ -22,7 +22,7 @@ export const Header: React.FC = () => {
       ]}>
       <View style={styles.content}>
         <Text style={[styles.title, {color: theme.textOnPrimary}]}>
-          The Isle of Man Islamic Association
+          The Isle of Man Islamic Centre
         </Text>
         
         <TouchableOpacity

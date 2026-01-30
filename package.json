@@ -14,7 +14,8 @@
     "react-native": "0.73.11",
     "@react-native-firebase/app": "^18.7.3",
     "@react-native-firebase/firestore": "^18.7.3",
-    "@react-native-async-storage/async-storage": "^1.21.0"
+    "@react-native-async-storage/async-storage": "^1.21.0",
+    "@notifee/react-native": "^9.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

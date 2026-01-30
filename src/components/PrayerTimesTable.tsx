@@ -12,7 +12,7 @@ export const PrayerTimesTable: React.FC<PrayerTimesTableProps> = ({
   prayers,
   nextPrayerName,
 }) => {
-  const {theme} = useTheme();
+  const {theme, formatTime} = useTheme();
 
   const prayerLabels: {[key: string]: {en: string; ar: string}} = {
     fajr: {en: 'Fajr Prayer', ar: 'صلاة الفجر'},
@@ -68,7 +68,7 @@ export const PrayerTimesTable: React.FC<PrayerTimesTableProps> = ({
                   {color: theme.text},
                   isNext && {color: theme.accent, fontWeight: 'bold'},
                 ]}>
-                  {prayer.mit || '--:--'}
+                  {formatTime(prayer.mit || '--:--')}
                 </Text>
               </View>
             ) : (
@@ -85,7 +85,7 @@ export const PrayerTimesTable: React.FC<PrayerTimesTableProps> = ({
                     {color: theme.text},
                     isNext && {color: theme.accent, fontWeight: 'bold'},
                   ]}>
-                    {prayer.apt || '--:--'}
+                    {formatTime(prayer.apt || '--:--')}
                   </Text>
                 </View>
 
@@ -101,7 +101,7 @@ export const PrayerTimesTable: React.FC<PrayerTimesTableProps> = ({
                     {color: theme.text},
                     isNext && {color: theme.accent, fontWeight: 'bold'},
                   ]}>
-                    {prayer.mat || '--:--'}
+                    {formatTime(prayer.mat || '--:--')}
                   </Text>
                 </View>
 
@@ -117,7 +117,7 @@ export const PrayerTimesTable: React.FC<PrayerTimesTableProps> = ({
                     {color: theme.text},
                     isNext && {color: theme.accent, fontWeight: 'bold'},
                   ]}>
-                    {prayer.mit || '--:--'}
+                    {formatTime(prayer.mit || '--:--')}
                   </Text>
                 </View>
               </View>

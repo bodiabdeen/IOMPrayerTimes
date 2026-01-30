@@ -1,12 +1,25 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import {useTheme} from '../contexts/ThemeContext';
+
+const STATUS_BAR_PADDING = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
 
 export const Header: React.FC = () => {
   const {isDark, toggleTheme, theme} = useTheme();
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.header}]}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: theme.header, paddingTop: 12 + STATUS_BAR_PADDING},
+      ]}>
       <View style={styles.content}>
         <Text style={[styles.title, {color: theme.textOnPrimary}]}>
           The Isle of Man Islamic Association
@@ -37,7 +50,6 @@ export const Header: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 12,
     paddingBottom: 16,
     paddingHorizontal: 16,
   },

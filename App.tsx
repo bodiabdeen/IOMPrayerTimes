@@ -22,7 +22,7 @@ import {fetchAllPrayerData} from './src/services/firebaseService';
 import {loadCachedData, saveCachedData} from './src/services/cacheService';
 import {updateWidget} from './src/services/widgetService';
 import {getNextPrayer} from './src/utils/prayerUtils';
-import {CombinedPrayerData} from './src/types';
+import {CombinedPrayerData, Prayer} from './src/types';
 
 function AppContent(): React.JSX.Element {
   const {theme} = useTheme();
@@ -32,7 +32,7 @@ function AppContent(): React.JSX.Element {
   const [isOffline, setIsOffline] = useState(false);
   const [showAnnouncements, setShowAnnouncements] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [currentNextPrayer, setCurrentNextPrayer] = useState<typeof prayerData extends {prayers: any[]} ? ReturnType<typeof getNextPrayer> : null>(null);
+  const [currentNextPrayer, setCurrentNextPrayer] = useState<Prayer | null>(null);
 
   useEffect(() => {
     console.log('🚀 Initializing app...');
@@ -167,7 +167,7 @@ function AppContent(): React.JSX.Element {
     );
   };
 
-  const handleNextPrayerChange = (prayer: typeof currentNextPrayer) => {
+  const handleNextPrayerChange = (prayer: Prayer | null) => {
     setCurrentNextPrayer(prayer);
     // Update widget when next prayer changes
     if (prayerData?.prayers && prayer) {
@@ -337,7 +337,6 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     borderWidth: 2,
-    justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
     shadowColor: '#000',

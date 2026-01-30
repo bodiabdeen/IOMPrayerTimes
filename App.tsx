@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
   Text,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ThemeProvider, useTheme} from './src/contexts/ThemeContext';
@@ -338,6 +339,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     borderWidth: 2,
     alignItems: 'center',
+    justifyContent: Platform.OS === 'ios' ? 'center' : 'flex-start',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},

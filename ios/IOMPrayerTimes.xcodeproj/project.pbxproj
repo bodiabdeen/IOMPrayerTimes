@@ -13,6 +13,7 @@
 		13B07FC01A68108700A75B9A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* GoogleService-Info.plist */; };
 		17AE21DA96E5BA2ABBEFFFB6 /* Pods_IOMPrayerTimes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3365C326F8F8A456390EE0 /* Pods_IOMPrayerTimes.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		87CB90417298DAC5CFF72389 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D9C0E2229251D3E1CDB1F0E4 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		4C3365C326F8F8A456390EE0 /* Pods_IOMPrayerTimes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IOMPrayerTimes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5709B34CF0A7D63546082F79 /* Pods-IOMPrayerTimes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IOMPrayerTimes.release.xcconfig"; path = "Target Support Files/Pods-IOMPrayerTimes/Pods-IOMPrayerTimes.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IOMPrayerTimes/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D9C0E2229251D3E1CDB1F0E4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = IOMPrayerTimes/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -87,6 +89,7 @@
 				13B07FB81A68108700A75B9A /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB91A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				D9C0E2229251D3E1CDB1F0E4 /* PrivacyInfo.xcprivacy */,
 			);
 			name = IOMPrayerTimes;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FC01A68108700A75B9A /* GoogleService-Info.plist in Resources */,
+				87CB90417298DAC5CFF72389 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,7 +429,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iomprayertimes";
+				PRODUCT_BUNDLE_IDENTIFIER = com.iomprayertimes;
 				PRODUCT_NAME = IOMPrayerTimes;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -454,7 +458,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iomprayertimes";
+				PRODUCT_BUNDLE_IDENTIFIER = com.iomprayertimes;
 				PRODUCT_NAME = IOMPrayerTimes;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -541,11 +545,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -624,11 +624,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

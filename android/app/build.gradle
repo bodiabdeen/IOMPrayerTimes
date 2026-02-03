@@ -51,7 +51,7 @@ android {
         applicationId "com.iomprayertimes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
+        versionCode 8
         versionName "1.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", (findProperty("newArchEnabled") ?: "true").toBoolean().toString()
         buildConfigField "boolean", "IS_HERMES_ENABLED", "(findProperty('hermesEnabled') ?: 'true').toBoolean()"

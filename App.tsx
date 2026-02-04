@@ -8,6 +8,7 @@ import {
   View,
   TouchableOpacity,
   Text,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ThemeProvider, useTheme} from './src/contexts/ThemeContext';
@@ -445,8 +446,14 @@ const styles = StyleSheet.create({
   },
   refreshIcon: {
     fontSize: 32,
+    lineHeight: 32,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    ...(Platform.OS === 'android' && {
+      includeFontPadding: false,
+      textAlignVertical: 'center',
+      height: 30,
+    }),
   },
   offlineBanner: {
     position: 'absolute',

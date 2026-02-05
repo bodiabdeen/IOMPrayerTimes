@@ -1,8 +1,12 @@
 // src/services/firebaseService.ts
-// Firebase Firestore integration service
+// Firebase Firestore integration service (modular API for v22+)
 
-import firestore from '@react-native-firebase/firestore';
-import firebase from '@react-native-firebase/app';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+} from '@react-native-firebase/firestore';
+import { getApps } from '@react-native-firebase/app';
 import { FIREBASE_CONFIG, PRAYER_NAMES } from '../utils/constants';
 import { ApiConfig, DailyConfig, AnnouncementsData, CombinedPrayerData, Prayer } from '../types';
 import {
@@ -20,7 +24,7 @@ import { getNextPrayer } from '../utils/prayerUtils';
 export const initializeFirebase = async (): Promise<void> => {
   try {
     // Check if Firebase is already initialized
-    const apps = firebase.apps;
+    const apps = getApps();
     if (apps.length > 0) {
       console.log('✅ Firebase already initialized');
       return;
@@ -39,17 +43,16 @@ export const initializeFirebase = async (): Promise<void> => {
  */
 export const fetchApiConfig = async (): Promise<ApiConfig | null> => {
   try {
-    const doc = await firestore()
-      .collection(FIREBASE_CONFIG.COLLECTION)
-      .doc(FIREBASE_CONFIG.DOCUMENTS.API_CONFIG)
-      .get();
-    
-    if (!doc.exists) {
+    const db = getFirestore();
+    const docRef = doc(db, FIREBASE_CONFIG.COLLECTION, FIREBASE_CONFIG.DOCUMENTS.API_CONFIG);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists) {
       console.error('❌ API config document not found');
       return null;
     }
-    
-    const rawData = doc.data();
+
+    const rawData = docSnap.data();
     
     // Map the Firebase structure to our ApiConfig type
     const data: ApiConfig = {
@@ -80,17 +83,16 @@ export const fetchApiConfig = async (): Promise<ApiConfig | null> => {
  */
 export const fetchDailyConfig = async (): Promise<DailyConfig | null> => {
   try {
-    const doc = await firestore()
-      .collection(FIREBASE_CONFIG.COLLECTION)
-      .doc(FIREBASE_CONFIG.DOCUMENTS.DAILY_CONFIG)
-      .get();
-    
-    if (!doc.exists) {
+    const db = getFirestore();
+    const docRef = doc(db, FIREBASE_CONFIG.COLLECTION, FIREBASE_CONFIG.DOCUMENTS.DAILY_CONFIG);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists) {
       console.error('❌ Daily config document not found');
       return null;
     }
-    
-    const rawData = doc.data();
+
+    const rawData = docSnap.data();
     
     if (!rawData?.dailyPrayers) {
       console.error('❌ dailyPrayers field not found');
@@ -147,17 +149,16 @@ export const fetchDailyConfig = async (): Promise<DailyConfig | null> => {
  */
 export const fetchAnnouncements = async (): Promise<AnnouncementsData | null> => {
   try {
-    const doc = await firestore()
-      .collection(FIREBASE_CONFIG.COLLECTION)
-      .doc(FIREBASE_CONFIG.DOCUMENTS.ANNOUNCEMENTS)
-      .get();
-    
-    if (!doc.exists) {
+    const db = getFirestore();
+    const docRef = doc(db, FIREBASE_CONFIG.COLLECTION, FIREBASE_CONFIG.DOCUMENTS.ANNOUNCEMENTS);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists) {
       console.log('📭 No announcements document found');
       return { list: [], lastUpdated: null };
     }
-    
-    const data = doc.data() as AnnouncementsData;
+
+    const data = docSnap.data() as AnnouncementsData;
     console.log('✅ Announcements fetched from Firebase');
     return data;
   } catch (error) {

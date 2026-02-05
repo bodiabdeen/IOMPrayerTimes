@@ -1,3 +1,8 @@
+# Disable New Architecture on iOS so the bridge registers RCTEventEmitter and
+# react-native-safe-area-context works without hacks. Native patches (see scripts/patch-react-native.js)
+# make the app use bridge + legacy RCTRootView when this is set.
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -31,7 +36,18 @@ target 'IOMPrayerTimes' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
-    
+
+    # Ensure hermes-engine script phase has REACT_NATIVE_PATH (fixes: with-environment.sh: No such file or directory)
+    react_native_path_value = File.join("${PODS_ROOT}", "..", config[:reactNativePath])
+    installer.pods_project.targets.each do |target|
+      if target.name == 'hermes-engine'
+        target.build_configurations.each do |build_config|
+          build_config.build_settings['REACT_NATIVE_PATH'] = react_native_path_value
+        end
+        break
+      end
+    end
+
     # Fix gRPC template syntax issue with Xcode 16.2+
     # The issue is in basic_seq.h where CallSeqFactory is used as a template member
     # This file exists in multiple locations (main pod dirs + Headers dirs)

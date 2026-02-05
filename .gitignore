@@ -57,6 +57,9 @@ yarn-error.log
 *.jsbundle
 **/android/**/assets/*.bundle
 
+# Android release artifacts (build outputs; do not commit)
+*.aab
+
 # Ruby / CocoaPods
 **/Pods/
 /vendor/bundle/

@@ -12,12 +12,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // AGP 8.5.2+ fixes JDK 21 jlink/JdkImageTransform; RN 0.73 ships 8.1.1.
+        // AGP 8.5.2+ fixes JDK 21 jlink/JdkImageTransform
         classpath("com.android.tools.build:gradle:8.5.2")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("com.google.gms:google-services:4.4.0")
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
+plugins {
+    id("com.facebook.react.rootproject")
+}

@@ -4,12 +4,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Platform,
-  StatusBar,
 } from 'react-native';
 import {useTheme} from '../contexts/ThemeContext';
 
-const STATUS_BAR_PADDING = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
 
 export const Header: React.FC = () => {
   const {isDark, toggleTheme, theme} = useTheme();
@@ -18,7 +15,7 @@ export const Header: React.FC = () => {
     <View
       style={[
         styles.container,
-        {backgroundColor: theme.header, paddingTop: 12 + STATUS_BAR_PADDING},
+        {backgroundColor: theme.header, paddingTop: 12 },
       ]}>
       <View style={styles.content}>
         <Text style={[styles.title, {color: theme.textOnPrimary}]}>

@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   RefreshControl,
   Alert,
@@ -10,6 +9,7 @@ import {
   Text,
   Platform,
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ThemeProvider, useTheme} from './src/contexts/ThemeContext';
 import {Header} from './src/components/Header';
@@ -338,9 +338,11 @@ function AppContent(): React.JSX.Element {
 
 function App(): React.JSX.Element {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
@@ -446,14 +448,13 @@ const styles = StyleSheet.create({
   },
   refreshIcon: {
     fontSize: 32,
-    lineHeight: 32,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    ...(Platform.OS === 'android' && {
-      includeFontPadding: false,
-      textAlignVertical: 'center',
-      height: 30,
-    }),
+    ...(Platform.OS === 'android'
+      ? {
+          transform: [{ translateY: -4 }],
+        }
+      : {}),
   },
   offlineBanner: {
     position: 'absolute',

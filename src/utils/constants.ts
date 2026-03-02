@@ -4,6 +4,8 @@ export const FIREBASE_CONFIG = {
     API_CONFIG: 'apiConfig',
     DAILY_CONFIG: 'dailyConfig',
     ANNOUNCEMENTS: 'announcements',
+    FALLBACK_RULES: 'fallbackRules',
+    MENU_LINKS: 'menuLinks',
   },
 };
 

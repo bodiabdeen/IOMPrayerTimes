@@ -59,9 +59,9 @@ android {
         applicationId "com.iomprayertimes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        // VERSION UPDATE: 1.1 (Build 15)
-        versionCode 15
-        versionName "1.1"
+        // VERSION UPDATE: 1.2 (Build 16)
+        versionCode 16
+        versionName "1.2"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", (findProperty("newArchEnabled") ?: "true").toBoolean().toString()
         buildConfigField "boolean", "IS_HERMES_ENABLED", "(findProperty('hermesEnabled') ?: 'true').toBoolean()"
     }

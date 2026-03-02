@@ -18,6 +18,7 @@ import {DateDisplay} from './src/components/DateDisplay';
 import {CountdownTimer} from './src/components/CountdownTimer';
 import {PrayerTimesTable} from './src/components/PrayerTimesTable';
 import {AnnouncementsModal} from './src/components/AnnouncementsModal';
+import {MenuModal} from './src/components/MenuModal';
 import {LoadingSpinner} from './src/components/LoadingSpinner';
 import {ConfigInfo} from './src/components/ConfigInfo';
 import {fetchAllPrayerData} from './src/services/firebaseService';
@@ -32,19 +33,20 @@ import {
 } from './src/services/notificationService';
 import {getNextPrayer} from './src/utils/prayerUtils';
 import {CombinedPrayerData} from './src/types';
-import {configureBackgroundRefresh, scheduleTestBackgroundFetch} from './src/services/backgroundRefreshService';
+import {configureBackgroundRefresh} from './src/services/backgroundRefreshService';
 
 const AUTO_REFRESH_INTERVAL = 1 * 60 * 60 * 1000;
 
 function AppContent(): React.JSX.Element {
-  const {theme, timeFormat, toggleTimeFormat} = useTheme();
+  const {theme} = useTheme();
   const insets = useSafeAreaInsets();
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [prayerData, setPrayerData] = useState<CombinedPrayerData | null>(null);
   const [isOffline, setIsOffline] = useState(false);
   const [showAnnouncements, setShowAnnouncements] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [currentNextPrayer, setCurrentNextPrayer] = useState<typeof prayerData extends {prayers: any[]} ? ReturnType<typeof getNextPrayer> : null>(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -74,7 +76,7 @@ function AppContent(): React.JSX.Element {
   const initializeApp = async () => {
     const hasPermission = await initializeNotifications();
     setNotificationsEnabled(hasPermission);
-    
+
     if (!hasPermission) {
       setTimeout(() => {
         Alert.alert(
@@ -111,7 +113,7 @@ function AppContent(): React.JSX.Element {
       const nextPrayer = getNextPrayer(prayerData.prayers);
       setCurrentNextPrayer(nextPrayer);
       updateWidget(prayerData.prayers, nextPrayer);
-      
+
       if (notificationsEnabled) {
         scheduleAllPrayerNotifications(prayerData.prayers);
       }
@@ -124,7 +126,7 @@ function AppContent(): React.JSX.Element {
       const readIds = stored ? new Set(JSON.parse(stored)) : new Set();
       const unread = prayerData?.announcements.filter(a => !readIds.has(a.id)).length || 0;
       setUnreadCount(unread);
-      
+
       if (notificationsEnabled && unread > 0) {
         const prefs = await getNotificationPreferences();
         if (prefs.announcements) {
@@ -143,7 +145,7 @@ function AppContent(): React.JSX.Element {
     } else if (data.announcements?.list && Array.isArray(data.announcements.list)) {
       announcementsList = data.announcements.list;
     }
-    
+
     return {
       prayers: Array.isArray(data.prayers) ? data.prayers : [],
       gregorianDate: data.gregorianDate || '',
@@ -177,7 +179,7 @@ function AppContent(): React.JSX.Element {
         setPrayerData(normalized);
         await saveCachedData(normalized);
         setIsOffline(false);
-        
+
         if (notificationsEnabled) {
           const prefs = await getNotificationPreferences();
           if (prefs.dataRefresh) {
@@ -188,7 +190,7 @@ function AppContent(): React.JSX.Element {
     } catch (error) {
       console.error('❌ Error fetching fresh data:', error);
       setIsOffline(true);
-      
+
       if (!prayerData) {
         Alert.alert(
           'Connection Error',
@@ -245,8 +247,12 @@ function AppContent(): React.JSX.Element {
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: theme.background}]}>
-      <Header />
-      
+      <Header
+        onMenuPress={() => setShowMenu(true)}
+        onAnnouncementsPress={() => setShowAnnouncements(true)}
+        unreadCount={unreadCount}
+      />
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -259,8 +265,8 @@ function AppContent(): React.JSX.Element {
           />
         }>
         <DateDisplay gregorianDate={prayerData.gregorianDate} hijriDate={prayerData.hijriDate} />
-        <CountdownTimer 
-          nextPrayer={currentNextPrayer} 
+        <CountdownTimer
+          nextPrayer={currentNextPrayer}
           prayers={prayerData.prayers}
           onNextPrayerChange={handleNextPrayerChange}
         />
@@ -268,27 +274,6 @@ function AppContent(): React.JSX.Element {
         <ConfigInfo config={prayerData.apiConfig || null} />
         <View style={{height: 140}} />
       </ScrollView>
-
-      <TouchableOpacity
-        style={[styles.announcementButton, {backgroundColor: theme.accent, bottom: 16 + insets.bottom}]}
-        onPress={() => setShowAnnouncements(true)}
-        activeOpacity={0.8}>
-        <Text style={styles.bellIcon}>🔔</Text>
-        {unreadCount > 0 && (
-          <View style={[styles.badge, {backgroundColor: theme.error}]}>
-            <Text style={styles.badgeText}>{unreadCount}</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.timeFormatButton, {backgroundColor: theme.cardBackground, borderColor: theme.accent, bottom: 88 + insets.bottom}]}
-        onPress={toggleTimeFormat}
-        activeOpacity={0.8}>
-        <Text style={[styles.timeFormatText, {color: theme.accent}]}>
-          {timeFormat === '24h' ? '12h' : '24h'}
-        </Text>
-      </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.refreshButton, {backgroundColor: theme.accent, bottom: 16 + insets.bottom}]}
@@ -302,6 +287,12 @@ function AppContent(): React.JSX.Element {
           <Text style={styles.offlineText}>⚠️ Offline - Showing cached data</Text>
         </View>
       )}
+
+      <MenuModal
+        visible={showMenu}
+        onClose={() => setShowMenu(false)}
+        onRefresh={handleRefresh}
+      />
 
       <AnnouncementsModal
         visible={showAnnouncements}
@@ -333,12 +324,6 @@ const styles = StyleSheet.create({
   errorText: {fontSize: 16, textAlign: 'center', marginBottom: 20},
   retryButton: {paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8},
   retryButtonText: {color: '#FFFFFF', fontSize: 16, fontWeight: '600'},
-  announcementButton: {position: 'absolute', left: 16, width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', elevation: 8, shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.3, shadowRadius: 8},
-  bellIcon: {fontSize: 24},
-  badge: {position: 'absolute', top: 4, right: 4, minWidth: 20, height: 20, borderRadius: 10, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 6},
-  badgeText: {color: '#FFFFFF', fontSize: 12, fontWeight: 'bold'},
-  timeFormatButton: {position: 'absolute', right: 16, width: 56, height: 56, borderRadius: 28, borderWidth: 2, justifyContent: 'center', alignItems: 'center', elevation: 6, shadowColor: '#000', shadowOffset: {width: 0, height: 3}, shadowOpacity: 0.25, shadowRadius: 6},
-  timeFormatText: {fontSize: 16, fontWeight: 'bold'},
   refreshButton: {position: 'absolute', right: 16, width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', elevation: 8, shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.3, shadowRadius: 8},
   refreshIcon: {fontSize: 32, fontWeight: 'bold', color: '#FFFFFF', ...(Platform.OS === 'android' ? {transform: [{translateY: -4}]} : {})},
   offlineBanner: {position: 'absolute', top: 0, left: 0, right: 0, padding: 8, alignItems: 'center'},

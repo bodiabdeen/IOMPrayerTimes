@@ -1,0 +1,46 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+}
+
+plugins {
+    id("com.facebook.react.settings")
+}
+
+// Resolve node so autolinking works when Gradle is run from Android Studio (where npx may not be in PATH).
+def rootDir = settings.layout.rootDirectory.dir("../").asFile
+def getNodePath() {
+    def nodeEnv = System.getenv("NODE_BINARY")
+    if (nodeEnv != null && !nodeEnv.trim().isEmpty()) return nodeEnv.trim()
+    try {
+        def proc = ["/bin/sh", "-c", "command -v node 2>/dev/null || true"].execute((String[]) null, rootDir)
+        proc.waitFor()
+        if (proc.exitValue() == 0 && proc.text?.trim()) return proc.text.trim()
+    } catch (Exception e) {}
+    try {
+        def proc = ["/bin/sh", "-l", "-c", "command -v node 2>/dev/null || true"].execute((String[]) null, rootDir)
+        proc.waitFor()
+        if (proc.exitValue() == 0 && proc.text?.trim()) return proc.text.trim()
+    } catch (Exception e) {}
+    for (path in ["/opt/homebrew/bin/node", "/usr/local/bin/node"]) {
+        if (new File(path).exists()) return path
+    }
+    return "node"
+}
+def nodePath = getNodePath()
+def cliScript = new File(rootDir, "node_modules/@react-native-community/cli/build/bin.js")
+def autolinkCommand = cliScript.exists()
+    ? [nodePath, cliScript.absolutePath, "config"]
+    : ["npx", "@react-native-community/cli", "config"]
+
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
+    ex.autolinkLibrariesFromCommand(autolinkCommand, rootDir)
+}
+
+rootProject.name = 'IOMPrayerTimes'
+
+include ':app'
